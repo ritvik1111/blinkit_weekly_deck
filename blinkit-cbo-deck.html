@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blinkit Weekly Deck</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#09090c;--s1:#0f1015;--s2:#15161d;--s3:#1c1e28;--s4:#222535;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.14);
+  --t1:#dde1f0;--t2:#7c8298;--t3:#454a5e;
+  --acc:#4c84ff;--acc2:#89b4ff;
+  --grn:#2dce89;--grn2:#0a3d26;
+  --red:#ff5c5c;--red2:#3d0f0f;
+  --amb:#f5a623;--amb2:#3d2800;
+  --pur:#9b7ef8;--cyn:#22d3d3;--pnk:#f472b6;
+  --font:'Geist',sans-serif;--mono:'Geist Mono',monospace;
+  --r:8px;--r2:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:13px;line-height:1.5;display:flex;flex-direction:column}
+.topbar{flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:stretch;padding:0 20px;position:relative;z-index:100}
+.tb-logo{display:flex;align-items:center;gap:9px;padding:11px 16px 11px 0;border-right:1px solid var(--b1);margin-right:6px;flex-shrink:0}
+.tb-pulse{width:7px;height:7px;border-radius:50%;background:var(--acc);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(76,132,255,.4)}50%{box-shadow:0 0 0 5px rgba(76,132,255,0)}}
+.tb-name{font-size:12px;font-weight:600;letter-spacing:.03em;line-height:1.2}
+.tb-sub{font-size:10px;color:var(--t2)}
+.tb-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}
+.tb-tabs::-webkit-scrollbar{display:none}
+.tbt{padding:0 14px;font-size:11px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:color .12s,border-color .12s;user-select:none}
+.tbt:hover{color:var(--t2)}
+.tbt.on{color:var(--acc2);border-bottom-color:var(--acc)}
+.tbt .badge{width:15px;height:15px;border-radius:3px;background:rgba(76,132,255,.12);color:var(--acc2);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tb-meta{display:flex;align-items:center;gap:8px;padding:0 0 0 10px;border-left:1px solid var(--b1);margin-left:auto;flex-shrink:0}
+.wk{background:rgba(76,132,255,.1);border:1px solid rgba(76,132,255,.2);color:var(--acc2);font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:4px;outline:none;width:110px}
+.body-wrap{flex:1;overflow:hidden;display:flex}
+.main{flex:1;overflow-y:auto;padding:18px 20px;scrollbar-width:thin;scrollbar-color:var(--b2) transparent}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.sec{display:none}.sec.on{display:block}
+.shd{margin-bottom:16px}
+.shd-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.shd-sub{font-size:11px;color:var(--t2)}
+.pc{background:var(--s2);border:1.5px dashed var(--b2);border-radius:var(--r2);padding:13px 15px;margin-bottom:12px;transition:border-color .15s}
+.pc:focus-within{border-color:rgba(76,132,255,.5)}
+.pc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
+.pc-lbl{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t2)}
+.pc-cols{font-family:var(--mono);font-size:9px;color:var(--t3);background:var(--s3);padding:2px 7px;border-radius:3px;line-height:1.5;max-width:60%;text-align:right}
+textarea.ta{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--b1);outline:none;color:var(--t1);font-family:var(--mono);font-size:11px;line-height:1.6;resize:vertical;min-height:72px;max-height:180px;border-radius:5px;padding:7px 10px;transition:border-color .15s}
+textarea.ta:focus{border-color:var(--b3)}
+textarea.ta::placeholder{color:var(--t3);font-style:italic;font-size:10px}
+.pc-foot{display:flex;align-items:center;gap:10px;margin-top:7px}
+.pbtn{background:var(--acc);border:none;color:#fff;padding:5px 14px;border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;font-family:var(--font)}
+.pbtn:hover{filter:brightness(1.1)}
+.ok{font-size:10px;color:var(--grn);opacity:0;transition:opacity .3s}
+.kg{display:grid;gap:9px;margin-bottom:12px}
+.kg.c2{grid-template-columns:repeat(2,1fr)}.kg.c3{grid-template-columns:repeat(3,1fr)}
+.kg.c4{grid-template-columns:repeat(4,1fr)}.kg.c5{grid-template-columns:repeat(5,1fr)}
+.kg.c6{grid-template-columns:repeat(6,1fr)}
+.kpi{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:13px 15px;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,var(--acc));opacity:.45}
+.kl{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.kv{font-size:19px;font-weight:600;font-family:var(--mono);color:var(--t1);line-height:1.1}
+.kv.sm{font-size:15px}
+.ks{font-size:10px;color:var(--t2);margin-top:2px}
+.d{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 6px;border-radius:3px;margin-top:4px}
+.d.up{background:rgba(45,206,137,.1);color:var(--grn)}
+.d.dn{background:rgba(255,92,92,.1);color:var(--red)}
+.d.na{background:var(--b1);color:var(--t2)}
+.tc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;margin-bottom:12px}
+.tc-head{padding:9px 13px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.tc-title{font-size:11px;font-weight:600;color:var(--t1)}
+.tc-hint{font-size:10px;color:var(--t3)}
+.tc-foot{padding:6px 13px;border-top:1px solid var(--b1);display:flex;gap:6px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{text-align:left;padding:6px 10px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);background:var(--s2);white-space:nowrap}
+.tbl th.r,.tbl td.r{text-align:right}
+.tbl td{padding:7px 10px;border-bottom:1px solid var(--b1);color:var(--t1);vertical-align:middle;white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.01)}
+.tbl .mono{font-family:var(--mono)}
+.tbl tr.foot td{background:rgba(76,132,255,.05);font-weight:600;color:var(--acc2);border-top:1px solid var(--b2)}
+.empty-row td{text-align:center;padding:24px;color:var(--t3);font-size:11px}
+.p{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600}
+.p-g{background:rgba(45,206,137,.1);color:var(--grn)}
+.p-r{background:rgba(255,92,92,.1);color:var(--red)}
+.p-a{background:rgba(245,166,35,.1);color:var(--amb)}
+.p-b{background:rgba(76,132,255,.12);color:var(--acc2)}
+.p-p{background:rgba(155,126,248,.1);color:var(--pur)}
+.p-c{background:rgba(34,211,211,.1);color:var(--cyn)}
+.p-n{background:var(--b1);color:var(--t2)}
+.bar{height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:4px}
+.bar-f{height:100%;border-radius:2px;transition:width .4s ease}
+.cbar{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.cbar-lbl{width:90px;font-size:10px;color:var(--t2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbar-track{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.cbar-fill{height:100%;border-radius:3px;transition:width .5s}
+.cbar-num{font-family:var(--mono);font-size:10px;color:var(--t2);width:55px;text-align:right;flex-shrink:0}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.split3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.nb{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:11px 13px;margin-bottom:12px}
+.nb-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+textarea.nt{width:100%;background:transparent;border:none;outline:none;color:var(--t1);font-family:var(--font);font-size:12px;line-height:1.7;resize:vertical;min-height:55px}
+textarea.nt::placeholder{color:var(--t3);font-size:11px}
+.sbtn{background:var(--s3);border:1px solid var(--b2);color:var(--t2);padding:4px 10px;border-radius:4px;font-size:10px;cursor:pointer;font-family:var(--font)}
+.sbtn:hover{color:var(--t1);border-color:var(--b3)}
+@media(max-width:960px){
+  .kg.c6,.kg.c5{grid-template-columns:repeat(3,1fr)}
+  .kg.c4{grid-template-columns:repeat(2,1fr)}
+  .split,.split3{grid-template-columns:1fr}
+  .pc-cols{display:none}
+  .main{padding:12px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-logo">
+    <div class="tb-pulse"></div>
+    <div><div class="tb-name">Blinkit Weekly Deck</div><div class="tb-sub">Live · Auto-saved</div></div>
+  </div>
+  <div class="tb-tabs">
+    <div class="tbt on"  onclick="go('sales',this)"><span class="badge">1</span>Sales</div>
+    <div class="tbt" onclick="go('stock',this)"><span class="badge">2</span>Stock / DOH</div>
+    <div class="tbt" onclick="go('city',this)"><span class="badge">3</span>City View</div>
+    <div class="tbt" onclick="go('citysku',this)"><span class="badge">4</span>City × SKU</div>
+    <div class="tbt" onclick="go('ads',this)"><span class="badge">5</span>Ads</div>
+    <div class="tbt" onclick="go('oos',this)"><span class="badge">6</span>OOS Flags</div>
+    <div class="tbt" onclick="go('cbo',this)"><span class="badge">7</span>CBO Summary</div>
+  </div>
+  <div class="tb-meta">
+    <input class="wk" id="wk" type="text" placeholder="Wk · Mon YYYY">
+    <div id="save-status" style="font-size:10px;color:var(--t3);font-family:var(--mono);min-width:90px;text-align:right"></div>
+    <button onclick="saveSession()" style="background:rgba(45,206,137,.15);border:1px solid rgba(45,206,137,.3);color:var(--grn);padding:4px 12px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">💾 Save</button>
+    <button onclick="exportLink()" style="background:rgba(76,132,255,.15);border:1px solid rgba(76,132,255,.3);color:var(--acc2);padding:4px 12px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🔗 Share</button>
+    <button onclick="clearSession()" style="background:var(--s3);border:1px solid var(--b2);color:var(--t3);padding:4px 10px;border-radius:4px;font-size:10px;cursor:pointer;font-family:var(--font)">✕</button>
+  </div>
+</div>
+
+<div class="body-wrap"><div class="main">
+
+<!-- TAB 1 — SALES -->
+<div class="sec on" id="sec-sales">
+  <div class="shd"><div class="shd-title">Sales Performance</div><div class="shd-sub">Cols: item_id · item_name · manufacturer_id · manufacturer_name · city_id · city_name · category · date · qty_sold · mrp (mrp = total revenue for qty)</div></div>
+  <div class="pc">
+    <div class="pc-head">
+      <div class="pc-lbl">📋 Sales dump</div>
+      <div class="pc-cols">A=item_id B=item_name C=mfr_id D=mfr_name E=city_id F=city_name G=category H=date I=qty_sold J=mrp(revenue)</div>
+    </div>
+    <textarea class="ta" id="raw-sales" rows="5" placeholder="item_id	item_name	manufacturer_id	manufacturer_name	city_id	city_name	category	date	qty_sold	mrp
+10161727	Vitamin C Serum 30ml	M1	Brand	C1	Mumbai	Skincare	2025-04-14	45	26955
+10161729	Lip Balm SPF	M1	Brand	C2	Delhi	Lips	2025-04-14	32	7968
+...paste full dump (header row optional)"></textarea>
+    <div class="pc-foot">
+      <button class="pbtn" onclick="parseSales()">⚡ Parse</button>
+      <span class="ok" id="ok-sales">✓ Done</span>
+      <span style="font-size:10px;color:var(--t3)" id="sales-count"></span>
+    </div>
+  </div>
+  <div class="kg c5">
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Total Revenue ₹</div><div class="kv" id="s-rev">—</div><div class="ks" id="s-rev-s">All SKUs · all cities</div></div>
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Total Units</div><div class="kv" id="s-units">—</div><div class="ks">qty_sold sum</div></div>
+    <div class="kpi" style="--kc:var(--pur)"><div class="kl">Active SKUs</div><div class="kv" id="s-skus">—</div><div class="ks">Unique items selling</div></div>
+    <div class="kpi" style="--kc:var(--amb)"><div class="kl">Active Cities</div><div class="kv" id="s-cities">—</div><div class="ks">Unique cities</div></div>
+    <div class="kpi" style="--kc:var(--cyn)"><div class="kl">Implied DRR ₹</div><div class="kv" id="s-drr">—</div><div class="ks" id="s-drr-s">Revenue ÷ days</div></div>
+  </div>
+  <div class="tc">
+    <div class="tc-head"><div class="tc-title">Top SKUs by Revenue</div><div class="tc-hint">Sorted by revenue · top 25</div></div>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Item ID</th><th>SKU Name</th><th>Category</th><th class="r">Units</th><th class="r">Revenue ₹</th><th class="r">Rev Share</th><th class="r">Avg/unit ₹</th><th>Cities</th><th>Contribution</th></tr></thead>
+      <tbody id="tb-sku-rank"><tr class="empty-row"><td colspan="10">Paste sales dump above ↑</td></tr></tbody>
+    </table>
+  </div>
+  <div class="split">
+    <div class="tc" style="margin-bottom:0">
+      <div class="tc-head"><div class="tc-title">Category Breakdown</div></div>
+      <table class="tbl">
+        <thead><tr><th>Category</th><th class="r">Units</th><th class="r">Revenue ₹</th><th class="r">Share %</th></tr></thead>
+        <tbody id="tb-cat"><tr class="empty-row"><td colspan="4">—</td></tr></tbody>
+      </table>
+    </div>
+    <div class="tc" style="margin-bottom:0">
+      <div class="tc-head"><div class="tc-title">Date-wise Trend</div></div>
+      <table class="tbl">
+        <thead><tr><th>Date</th><th class="r">Units</th><th class="r">Revenue ₹</th></tr></thead>
+        <tbody id="tb-date"><tr class="empty-row"><td colspan="3">—</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2 — STOCK / DOH -->
+<div class="sec" id="sec-stock">
+  <div class="shd"><div class="shd-title">Stock · DOH · DOC</div><div class="shd-sub">Two dumps: SOH snapshot + DOH dashboard.</div></div>
+  <div class="split" style="margin-bottom:0">
+    <div class="pc" style="margin-bottom:12px">
+      <div class="pc-head">
+        <div class="pc-lbl">📦 SOH Snapshot</div>
+        <div class="pc-cols">created_at · facility_name · facility_id · item_id · item_name · backend_inv_qty · frontend_inv_qty</div>
+      </div>
+      <textarea class="ta" id="raw-soh" rows="5" placeholder="created_at	backend_facility_name	backend_facility_id	item_id	item_name	backend_inv_qty	frontend_inv_qty
+2025-04-17 08:00	Mumbai WH	F01	10161727	Vitamin C Serum 30ml	120	85
+..."></textarea>
+      <div class="pc-foot"><button class="pbtn" onclick="parseSOH()">⚡ Parse SOH</button><span class="ok" id="ok-soh">✓ Done</span></div>
+    </div>
+    <div class="pc" style="margin-bottom:12px">
+      <div class="pc-head">
+        <div class="pc-lbl">📊 DOH Dashboard</div>
+        <div class="pc-cols">WH Name · item_id · item_name · Backend Qty · Frontend Qty · WH Qty · WH DRR · Backend DOH · Front DOH · DOH · Open PO Qty · In Transit DOH · DOC</div>
+      </div>
+      <textarea class="ta" id="raw-doh" rows="5" placeholder="WH Name	item_id	item_name	Backend Qty.	Frontend Qty.	WH Qty.	WH DRR	Backend DOH	Front DOH	DOH	Open PO Qty.	In Transit DOH	DOC
+Mumbai WH	10161727	Vitamin C Serum 30ml	120	85	205	18.2	6.6	4.7	11.3	500	27.5	38.8
+..."></textarea>
+      <div class="pc-foot"><button class="pbtn" onclick="parseDOH()">⚡ Parse DOH</button><span class="ok" id="ok-doh">✓ Done</span></div>
+    </div>
+  </div>
+  <div class="kg c5">
+    <div class="kpi" style="--kc:var(--red)"><div class="kl">OOS Locations</div><div class="kv" id="st-oos">—</div><div class="ks">WH where DOH = 0</div></div>
+    <div class="kpi" style="--kc:var(--amb)"><div class="kl">At Risk (&lt;3 DOH)</div><div class="kv" id="st-risk">—</div><div class="ks">WH-SKU combos</div></div>
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Healthy (&gt;7 DOH)</div><div class="kv" id="st-ok">—</div></div>
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Open PO (Total Qty)</div><div class="kv" id="st-po">—</div></div>
+    <div class="kpi" style="--kc:var(--cyn)"><div class="kl">Avg DOC (days)</div><div class="kv" id="st-doc">—</div><div class="ks">Incl. in-transit</div></div>
+  </div>
+  <div class="tc">
+    <div class="tc-head"><div class="tc-title">DOH Dashboard — All SKUs × Warehouses</div><div class="tc-hint">Red = OOS · Amber = &lt;3d · Yellow = &lt;7d</div></div>
+    <table class="tbl">
+      <thead><tr><th>WH</th><th>Item ID</th><th>SKU Name</th><th>Category</th><th class="r">Backend Qty</th><th class="r">Frontend Qty</th><th class="r">WH DRR</th><th class="r">DOH</th><th class="r">Open PO</th><th class="r">In Transit DOH</th><th class="r">DOC</th><th>Status</th></tr></thead>
+      <tbody id="tb-doh"><tr class="empty-row"><td colspan="12">Paste DOH dump above ↑</td></tr></tbody>
+    </table>
+  </div>
+  <div class="tc">
+    <div class="tc-head"><div class="tc-title">SOH Snapshot — Facility Level</div></div>
+    <table class="tbl">
+      <thead><tr><th>Facility</th><th>Item ID</th><th>SKU Name</th><th>Category</th><th class="r">Backend Qty</th><th class="r">Frontend Qty</th><th class="r">Total</th><th>Status</th></tr></thead>
+      <tbody id="tb-soh"><tr class="empty-row"><td colspan="8">Paste SOH dump above ↑</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 3 — CITY VIEW -->
+<div class="sec" id="sec-city">
+  <div class="shd"><div class="shd-title">City-level Performance</div><div class="shd-sub">Cols: city_name · current_units · current_revenue · current_drr · compare_units · compare_revenue · compare_drr · units_growth_% · revenue_growth_% · drr_growth_% · Zone</div></div>
+  <div class="pc">
+    <div class="pc-head">
+      <div class="pc-lbl">🏙️ City-level dump</div>
+      <div class="pc-cols">city_name · cur_units · cur_rev · cur_drr · cmp_units · cmp_rev · cmp_drr · units_gr% · rev_gr% · drr_gr% · Zone</div>
+    </div>
+    <textarea class="ta" id="raw-city" rows="5" placeholder="city_name	current_units	current_revenue	current_drr	compare_units	compare_revenue	compare_drr	units_growth_%	revenue_growth_%	drr_growth_%	Zone
+Mumbai	1240	742800	60000	1100	660000	53000	12.7%	12.5%	13.2%	West
+Delhi	980	588000	48000	1050	630000	51500	-6.7%	-6.7%	-6.8%	North
+..."></textarea>
+    <div class="pc-foot"><button class="pbtn" onclick="parseCity()">⚡ Parse</button><span class="ok" id="ok-city">✓ Done</span></div>
+  </div>
+  <div class="kg c4">
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Top City</div><div class="kv sm" id="cy-top">—</div><div class="d na" id="cy-top-g">—</div></div>
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Top City Revenue</div><div class="kv" id="cy-toprev">—</div></div>
+    <div class="kpi" style="--kc:var(--red)"><div class="kl">Degrown Cities</div><div class="kv" id="cy-dn">—</div><div class="ks">rev_growth &lt; 0</div></div>
+    <div class="kpi" style="--kc:var(--pur)"><div class="kl">Cities Active</div><div class="kv" id="cy-cnt">—</div></div>
+  </div>
+  <div class="split">
+    <div class="tc" style="margin-bottom:0">
+      <div class="tc-head"><div class="tc-title">City Performance — Current vs Compare</div></div>
+      <table class="tbl">
+        <thead><tr><th>City</th><th>Zone</th><th class="r">Cur Rev ₹</th><th class="r">Cmp Rev ₹</th><th class="r">Rev Gr%</th><th class="r">Cur Units</th><th class="r">Units Gr%</th><th class="r">DRR ₹</th><th class="r">DRR Gr%</th></tr></thead>
+        <tbody id="tb-city"><tr class="empty-row"><td colspan="9">Paste city dump ↑</td></tr></tbody>
+      </table>
+    </div>
+    <div>
+      <div class="tc" style="margin-bottom:10px">
+        <div class="tc-head"><div class="tc-title">Revenue Share by City</div></div>
+        <div style="padding:12px 14px" id="city-bars"><div style="color:var(--t3);font-size:11px;padding:8px 0">Paste city data to see distribution</div></div>
+      </div>
+      <div class="tc" style="margin-bottom:0">
+        <div class="tc-head"><div class="tc-title">Zone Summary</div></div>
+        <table class="tbl">
+          <thead><tr><th>Zone</th><th class="r">Revenue ₹</th><th class="r">Units</th><th class="r">Cities</th></tr></thead>
+          <tbody id="tb-zone"><tr class="empty-row"><td colspan="4">—</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4 — CITY × SKU -->
+<div class="sec" id="sec-citysku">
+  <div class="shd"><div class="shd-title">City × SKU Deep Dive</div><div class="shd-sub">city_name · item_id · item_name · warehouse_name · current_units · current_revenue · current_drr · compare_units · compare_revenue · compare_drr · units_growth_% · revenue_growth_% · drr_growth_% · Cogs · MRP · MTD Units · Total Cogs · GMV · Cogs/GMV · Saliency · Zone · Compare Saliency</div></div>
+  <div class="pc">
+    <div class="pc-head">
+      <div class="pc-lbl">🔬 City × SKU dump</div>
+      <div class="pc-cols">22 columns — see subtitle above</div>
+    </div>
+    <textarea class="ta" id="raw-csku" rows="5" placeholder="city_name	item_id	item_name	warehouse_name	current_units	current_revenue	current_drr	compare_units	compare_revenue	compare_drr	units_growth_%	revenue_growth_%	drr_growth_%	Cogs	MRP	MTD Units	Total Cogs	GMV	Cogs/GMV	Saliency	Zone	Compare Saliency
+Mumbai	10161727	Vitamin C Serum 30ml	Mumbai WH	340	203830	16500	300	179820	14500	13.3%	13.3%	13.8%	89	599	340	30260	203830	0.148	0.0274	West	0.0242
+..."></textarea>
+    <div class="pc-foot"><button class="pbtn" onclick="parseCitySKU()">⚡ Parse</button><span class="ok" id="ok-csku">✓ Done</span></div>
+  </div>
+  <div class="kg c6">
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Total GMV ₹</div><div class="kv" id="cs-gmv">—</div></div>
+    <div class="kpi" style="--kc:var(--red)"><div class="kl">Total COGS ₹</div><div class="kv" id="cs-cogs">—</div></div>
+    <div class="kpi" style="--kc:var(--amb)"><div class="kl">Blended COGS/GMV</div><div class="kv" id="cs-margin">—</div><div class="ks">Lower = better margin</div></div>
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">MTD Units Total</div><div class="kv" id="cs-mtd">—</div></div>
+    <div class="kpi" style="--kc:var(--pur)"><div class="kl">Degrown Combos</div><div class="kv" id="cs-dn">—</div><div class="ks">City×SKU rev &lt; 0</div></div>
+    <div class="kpi" style="--kc:var(--pnk)"><div class="kl">Saliency Gainers</div><div class="kv" id="cs-sal">—</div><div class="ks">vs compare period</div></div>
+  </div>
+  <div class="tc">
+    <div class="tc-head"><div class="tc-title">🚨 Degrowth SKUs — City Level (rev growth &lt; 0)</div><div class="tc-hint">Sorted by absolute revenue decline</div></div>
+    <table class="tbl">
+      <thead><tr><th>City</th><th>Zone</th><th>SKU</th><th>Category</th><th class="r">Cur Rev ₹</th><th class="r">Cmp Rev ₹</th><th class="r">Rev Gr%</th><th class="r">Units Gr%</th><th class="r">Saliency</th><th class="r">Cmp Saliency</th><th class="r">COGS/GMV</th><th>Signal</th></tr></thead>
+      <tbody id="tb-degrowth"><tr class="empty-row"><td colspan="12">Paste City×SKU dump ↑</td></tr></tbody>
+    </table>
+  </div>
+  <div class="tc">
+    <div class="tc-head"><div class="tc-title">All City × SKU — Revenue Ranked</div><div class="tc-hint">Full table · scroll</div></div>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>City</th><th>Zone</th><th>SKU</th><th>Category</th><th class="r">Cur Rev ₹</th><th class="r">Rev Gr%</th><th class="r">Units Gr%</th><th class="r">GMV ₹</th><th class="r">COGS/GMV</th><th class="r">MTD Units</th><th class="r">Saliency</th><th>Trend</th></tr></thead>
+      <tbody id="tb-csku-all"><tr class="empty-row"><td colspan="13">Paste City×SKU dump ↑</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TAB 5 — ADS -->
+<div class="sec" id="sec-ads">
+  <div class="shd"><div class="shd-title">Ads Performance</div><div class="shd-sub">Product Booster (20 cols) + Recommendation Ads (17 cols).</div></div>
+  <div class="pc">
+    <div class="pc-head">
+      <div class="pc-lbl">🎯 Product Booster dump</div>
+      <div class="pc-cols">Date · CampID · CampName · TargType · TargVal · MatchType · MostViewedPos · PacingType · CPM · Impressions · DirATC · IndirATC · DirQty · IndirQty · DirSales · IndirSales · NewUsers · EstBudget · DirRoAS · TotalRoAS</div>
+    </div>
+    <textarea class="ta" id="raw-pb" rows="5" placeholder="Date	Campaign ID	Campaign Name	Targeting Type	Targeting Value	Match Type	Most Viewed Position	Pacing Type	CPM	Impressions	Direct ATC	Indirect ATC	Direct Quantities Sold	Indirect Quantities Sold	Direct Sales	Indirect Sales	New Users Acquired	Estimated Budget Consumed	Direct RoAS	Total RoAS
+2025-04-14	C101	Vitamin C Brand KW	Keyword	vitamin c serum	Exact	1	Standard	45	12400	320	180	28	14	16800	8400	45	756	22.2	11.1"></textarea>
+    <div class="pc-foot"><button class="pbtn" onclick="parsePB()">⚡ Parse PB</button><span class="ok" id="ok-pb">✓ Done</span></div>
+  </div>
+  <div class="pc">
+    <div class="pc-head">
+      <div class="pc-lbl">🔁 Recommendation Ads dump</div>
+      <div class="pc-cols">Date · CampID · CampName · TargType · PacingType · CPM · Impressions · DirATC · IndirATC · DirQty · IndirQty · DirSales · IndirSales · NewUsers · EstBudget · DirRoAS · TotalRoAS</div>
+    </div>
+    <textarea class="ta" id="raw-rec" rows="5" placeholder="Date	Campaign ID	Campaign Name	Targeting Type	Pacing Type	CPM	Impressions	Direct ATC	Indirect ATC	Direct Quantities Sold	Indirect Quantities Sold	Direct Sales	Indirect Sales	New Users Acquired	Estimated Budget Consumed	Direct RoAS	Total RoAS
+2025-04-14	R201	Rec Skincare	Category	Standard	38	8200	180	95	15	8	9000	4800	28	312	28.8	14.4"></textarea>
+    <div class="pc-foot"><button class="pbtn" onclick="parseRec()">⚡ Parse Rec</button><span class="ok" id="ok-rec">✓ Done</span></div>
+  </div>
+  <div class="kg c6">
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Total Impressions</div><div class="kv" id="a-impr">—</div><div class="ks">PB + Rec</div></div>
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Total Direct Sales ₹</div><div class="kv" id="a-dsales">—</div></div>
+    <div class="kpi" style="--kc:var(--amb)"><div class="kl">Total Spend ₹</div><div class="kv" id="a-spend">—</div></div>
+    <div class="kpi" style="--kc:var(--red)"><div class="kl">ACOS</div><div class="kv" id="a-acos">—</div><div class="ks">Spend ÷ Ad Rev</div></div>
+    <div class="kpi" style="--kc:var(--pur)"><div class="kl">TACOS</div><div class="kv" id="a-tacos">—</div><div class="ks" id="a-tacos-s">Needs sales data</div></div>
+    <div class="kpi" style="--kc:var(--cyn)"><div class="kl">New Users</div><div class="kv" id="a-nua">—</div></div>
+  </div>
+  <div class="kg c4">
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Blended Direct RoAS</div><div class="kv" id="a-roas">—</div></div>
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Direct ATC</div><div class="kv" id="a-datc">—</div></div>
+    <div class="kpi" style="--kc:var(--pur)"><div class="kl">Indirect ATC</div><div class="kv" id="a-iatc">—</div></div>
+    <div class="kpi" style="--kc:var(--pnk)"><div class="kl">Direct Qty Sold</div><div class="kv" id="a-dqty">—</div></div>
+  </div>
+  <div class="split">
+    <div class="tc" style="margin-bottom:0">
+      <div class="tc-head"><div class="tc-title">Product Booster — by Campaign</div></div>
+      <table class="tbl">
+        <thead><tr><th>Campaign</th><th>Type</th><th class="r">Impressions</th><th class="r">Dir Qty</th><th class="r">Dir Sales ₹</th><th class="r">Spend ₹</th><th class="r">Dir RoAS</th><th class="r">NUA</th></tr></thead>
+        <tbody id="tb-pb"><tr class="empty-row"><td colspan="8">Paste PB dump ↑</td></tr></tbody>
+      </table>
+    </div>
+    <div class="tc" style="margin-bottom:0">
+      <div class="tc-head"><div class="tc-title">Recommendation Ads — by Campaign</div></div>
+      <table class="tbl">
+        <thead><tr><th>Campaign</th><th>Type</th><th class="r">Impressions</th><th class="r">Dir Qty</th><th class="r">Dir Sales ₹</th><th class="r">Spend ₹</th><th class="r">Dir RoAS</th><th class="r">NUA</th></tr></thead>
+        <tbody id="tb-rec"><tr class="empty-row"><td colspan="8">Paste Rec dump ↑</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 6 — OOS FLAGS -->
+<div class="sec" id="sec-oos">
+  <div class="shd"><div class="shd-title">OOS Flags — Auto + Manual</div><div class="shd-sub">Auto-populated from DOH dump · manually add root cause and action</div></div>
+  <div class="kg c4">
+    <div class="kpi" style="--kc:var(--red)"><div class="kl">OOS (DOH = 0)</div><div class="kv" id="o-oos">—</div></div>
+    <div class="kpi" style="--kc:var(--amb)"><div class="kl">Critical (&lt;3d)</div><div class="kv" id="o-crit">—</div></div>
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Recovering (PO inbound)</div><div class="kv" id="o-rec">—</div></div>
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Est. Rev at Risk ₹/d</div><div class="kv" id="o-rev">—</div><div class="ks">OOS × WH DRR</div></div>
+  </div>
+  <div class="tc">
+    <div class="tc-head"><div class="tc-title">OOS / Critical SKU Tracker</div><div class="tc-hint">Auto from DOH · add root cause + action manually</div></div>
+    <table class="tbl">
+      <thead><tr><th>WH</th><th>Item ID</th><th>SKU</th><th>Category</th><th class="r">DOH</th><th class="r">DOC</th><th class="r">Open PO</th><th>Status</th><th>Root Cause</th><th>Action / ETA</th></tr></thead>
+      <tbody id="tb-oos"><tr class="empty-row"><td colspan="10">Parse DOH dump in Tab 2 first</td></tr></tbody>
+    </table>
+    <div class="tc-foot"><button class="sbtn" onclick="addOOSRow()">+ Manual row</button></div>
+  </div>
+</div>
+
+<!-- TAB 7 — CBO SUMMARY -->
+<div class="sec" id="sec-cbo">
+  <div class="shd"><div class="shd-title">CBO Summary — Thursday Deck</div><div class="shd-sub">Auto-pulls key numbers from all parsed data. Fill the context boxes before the meeting.</div></div>
+  <div class="kg c4">
+    <div class="kpi" style="--kc:var(--grn)"><div class="kl">Total Revenue ₹</div><div class="kv" id="cb-rev">—</div><div class="ks" id="cb-rev-s">Parse Sales tab</div></div>
+    <div class="kpi" style="--kc:var(--acc)"><div class="kl">Total Ad Spend ₹</div><div class="kv" id="cb-spend">—</div></div>
+    <div class="kpi" style="--kc:var(--amb)"><div class="kl">TACOS</div><div class="kv" id="cb-tacos">—</div></div>
+    <div class="kpi" style="--kc:var(--red)"><div class="kl">OOS SKU-WH Combos</div><div class="kv" id="cb-oos">—</div></div>
+  </div>
+  <div class="split">
+    <div class="nb"><div class="nb-lbl">✅ Wins this week</div><textarea class="nt" placeholder="Top SKU performance, city growth, promo uplift, improved availability, new user acquisition..."></textarea></div>
+    <div class="nb"><div class="nb-lbl">⚠️ Issues & Risks</div><textarea class="nt" placeholder="OOS situations and revenue at risk, ICPC drag, competitor activity, degrowth cities/SKUs..."></textarea></div>
+  </div>
+  <div class="split">
+    <div class="nb"><div class="nb-lbl">📊 ICPC — overall & reasons</div><textarea class="nt" placeholder="ICPC this week vs last week. Key factors: availability %, pricing vs competition, listing quality, review sentiment..."></textarea></div>
+    <div class="nb"><div class="nb-lbl">🎯 Marketing / GWP / BXGY / Sale events</div><textarea class="nt" placeholder="Active promos performance, GWP units deployed, upcoming sale event planning status and brief deadline..."></textarea></div>
+  </div>
+  <div class="split">
+    <div class="nb"><div class="nb-lbl">🏪 Category team inputs</div><textarea class="nt" placeholder="FOC schemes, coupons, platform insights, new shelf space, visibility opportunities from category managers..."></textarea></div>
+    <div class="nb"><div class="nb-lbl">💰 Finance — payments, rebates</div><textarea class="nt" placeholder="Overdue payments from platform, rebate claim status, credit note disputes, Q-end settlement updates..."></textarea></div>
+  </div>
+  <div class="nb"><div class="nb-lbl">📌 Next week — Top 3 actions · Owner · Deadline</div>
+    <textarea class="nt" style="min-height:65px" placeholder="1.  —  Owner:  —  By: &#10;2.  —  Owner:  —  By: &#10;3.  —  Owner:  —  By: "></textarea>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+var D={sales:[],soh:[],doh:[],city:[],csku:[],pb:[],rec:[]};
+var CAT={
+  "10161727":"Sunscreens","10161729":"Lip Balms","10169833":"Sunscreens","10169823":"Moisturizer",
+  "10217198":"Sunscreens","10219902":"Lip Balms","10278084":"Serums","10275930":"Serums",
+  "10161737":"Serums","10254412":"Moisturizer","10288447":"Sunscreens","10191885":"Serums",
+  "10211278":"Sunscreens","10161728":"Serums","10161730":"Facewash","10161736":"Serums",
+  "10161734":"Serums","10191881":"Serums","10199140":"Sunscreens","10208215":"Sunscreens"
+};
+function cat(id){return CAT[String(id||'').trim()]||'—';}
+function go(id,el){
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('on')});
+  document.querySelectorAll('.tbt').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('sec-'+id).classList.add('on');
+  el.classList.add('on');
+  document.querySelector('.main').scrollTop=0;
+}
+function fR(n){
+  if(isNaN(n)||n===null)return'—';
+  var a=Math.abs(n),s=n<0?'-':'';
+  if(a>=10000000)return s+'₹'+(a/10000000).toFixed(1)+'Cr';
+  if(a>=100000)return s+'₹'+(a/100000).toFixed(1)+'L';
+  if(a>=1000)return s+'₹'+(a/1000).toFixed(1)+'K';
+  return s+'₹'+Math.round(a);
+}
+function fN(n){if(isNaN(n)||n===null)return'—';var a=Math.abs(n),s=n<0?'-':'';if(a>=100000)return s+(a/100000).toFixed(1)+'L';if(a>=1000)return s+(a/1000).toFixed(1)+'K';return s+Math.round(a);}
+function fP(n,d){return d?(n/d*100).toFixed(1)+'%':'—';}
+function fG(v){
+  if(!v&&v!==0)return'<span class="d na">—</span>';
+  var s=String(v).replace('%','').trim(),n=parseFloat(s);
+  if(isNaN(n))return'<span class="d na">'+esc(v)+'</span>';
+  return n>0?'<span class="d up">▲ '+n.toFixed(1)+'%</span>':'<span class="d dn">▼ '+Math.abs(n).toFixed(1)+'%</span>';
+}
+function fDoh(n){var v=parseFloat(n);if(isNaN(v))return'<span class="p p-n">—</span>';if(v===0)return'<span class="p p-r">OOS</span>';if(v<3)return'<span class="p p-r">&lt;3d</span>';if(v<7)return'<span class="p p-a">&lt;7d</span>';return'<span class="p p-g">OK</span>';}
+function zonePill(z){var v=String(z||'').trim();if(!v||v==='—')return'<span class="p p-n">—</span>';var c=v[0].toUpperCase();var cls={'N':'p-b','S':'p-g','E':'p-a','W':'p-p'}[c]||'p-n';return'<span class="p '+cls+'">'+esc(v)+'</span>';}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function flash(id){var el=document.getElementById(id);if(!el)return;el.style.opacity=1;setTimeout(function(){el.style.opacity=0;},2500);}
+function set(id,v){var el=document.getElementById(id);if(el)el.innerHTML=v;}
+function bar(v,max,col){var w=max>0?Math.round(v/max*100):0;return'<div class="bar"><div class="bar-f" style="width:'+w+'%;background:'+col+'"></div></div>';}
+
+function parseTSV(raw,headerWords){
+  var lines=raw.trim().split('\n').filter(function(l){return l.trim();});
+  var rows=[];
+  for(var i=0;i<lines.length;i++){
+    var sep=lines[i].includes('\t')?'\t':(lines[i].includes('|')?'|':',');
+    var c=lines[i].split(sep).map(function(x){return x.trim();});
+    if(i<3&&headerWords.some(function(w){return c[0].toLowerCase().replace(/[^a-z]/g,'').includes(w.toLowerCase().replace(/[^a-z]/g,''));}))continue;
+    if(c.length<3)continue;
+    rows.push(c);
+  }
+  return rows;
+}
+
+function parseSales(){
+  D.sales=parseTSV(document.getElementById('raw-sales').value,['item_id','itemid']);
+  if(!D.sales.length){alert('No rows found. Check format.');return;}
+  D.sales.forEach(function(r){r._qty=parseFloat(r[8])||0;r._rev=parseFloat(r[9])||0;r._cat=CAT[String(r[0]).trim()]||r[6]||'Unknown';});
+  var totRev=0,totU=0;
+  D.sales.forEach(function(r){totRev+=r._rev;totU+=r._qty;});
+  var skus=new Set(D.sales.map(function(r){return r[0];})).size;
+  var cities=new Set(D.sales.map(function(r){return r[5];})).size;
+  var dates=new Set(D.sales.map(function(r){return r[7];}));
+  var nDays=Math.max(dates.size,1),drr=totRev/nDays;
+  set('s-rev',fR(totRev));set('s-rev-s',fN(totU)+' units · '+skus+' SKUs');
+  set('s-units',fN(totU));set('s-skus',skus);set('s-cities',cities);
+  set('s-drr',fR(drr));set('s-drr-s','Over '+nDays+' day(s)');
+  set('sales-count',D.sales.length+' rows');
+  set('cb-rev',fR(totRev));set('cb-rev-s',fN(totU)+' units');
+  D._totRev=totRev;calcTACOS();flash('ok-sales');
+  var skuMap={};
+  D.sales.forEach(function(r){
+    var id=r[0],nm=r[1]||r[0];
+    if(!skuMap[id])skuMap[id]={id:id,nm:nm,cat:CAT[String(id).trim()]||r[6]||'Unknown',qty:0,rev:0,cities:new Set()};
+    skuMap[id].qty+=r._qty;skuMap[id].rev+=r._rev;skuMap[id].cities.add(r[5]);
+  });
+  var skuArr=Object.values(skuMap).sort(function(a,b){return b.rev-a.rev;}),maxR=skuArr[0]?skuArr[0].rev:1;
+  var html='';skuArr.slice(0,25).forEach(function(s,i){
+    var fl=i<3?'<span class="p p-g">Top '+(i+1)+'</span>':parseFloat(fP(s.rev,totRev))<1?'<span class="p p-r">Tail</span>':'';
+    html+='<tr><td style="color:var(--t3)">'+(i+1)+'</td><td class="mono" style="font-size:10px">'+esc(s.id)+'</td><td>'+esc(s.nm)+'</td><td><span class="p p-b">'+esc(s.cat)+'</span></td><td class="r mono">'+fN(s.qty)+'</td><td class="r mono">'+fR(s.rev)+'</td><td class="r mono">'+fP(s.rev,totRev)+'</td><td class="r mono">'+fR(s.qty?s.rev/s.qty:0)+'</td><td>'+s.cities.size+'</td><td>'+bar(s.rev,maxR,'var(--acc)')+'</td></tr>';
+  });
+  set('tb-sku-rank',html||'<tr class="empty-row"><td colspan="10">No data</td></tr>');
+  var catMap={};
+  D.sales.forEach(function(r){var k=CAT[String(r[0]).trim()]||r[6]||'Unknown';if(!catMap[k])catMap[k]={qty:0,rev:0};catMap[k].qty+=r._qty;catMap[k].rev+=r._rev;});
+  var cArr=Object.entries(catMap).sort(function(a,b){return b[1].rev-a[1].rev;});
+  html='';cArr.forEach(function(c){html+='<tr><td>'+esc(c[0])+'</td><td class="r mono">'+fN(c[1].qty)+'</td><td class="r mono">'+fR(c[1].rev)+'</td><td class="r mono">'+fP(c[1].rev,totRev)+'</td></tr>';});
+  set('tb-cat',html);
+  var dMap={};
+  D.sales.forEach(function(r){var k=r[7]||'?';if(!dMap[k])dMap[k]={qty:0,rev:0};dMap[k].qty+=r._qty;dMap[k].rev+=r._rev;});
+  var dArr=Object.entries(dMap).sort(function(a,b){return a[0]>b[0]?1:-1;});
+  html='';dArr.forEach(function(d){html+='<tr><td class="mono" style="font-size:10px">'+esc(d[0])+'</td><td class="r mono">'+fN(d[1].qty)+'</td><td class="r mono">'+fR(d[1].rev)+'</td></tr>';});
+  set('tb-date',html);
+}
+
+function parseSOH(){
+  D.soh=parseTSV(document.getElementById('raw-soh').value,['created_at','createdat']);
+  if(!D.soh.length){alert('No SOH rows found.');return;}
+  var html='';
+  D.soh.forEach(function(r){
+    var bq=parseFloat(r[5])||0,fq=parseFloat(r[6])||0,tot=bq+fq;
+    var st=tot===0?'<span class="p p-r">OOS</span>':tot<50?'<span class="p p-a">Low</span>':'<span class="p p-g">OK</span>';
+    html+='<tr><td class="mono" style="font-size:10px">'+esc(r[3])+'</td><td class="r mono">'+bq+'</td><td class="r mono">'+fq+'</td><td class="r mono">'+tot+'</td><td>'+st+'</td></tr>';
+  });
+  set('tb-soh',html);flash('ok-soh');
+}
+
+function parseDOH(){
+  D.doh=parseTSV(document.getElementById('raw-doh').value,['wh name','whname','warehouse']);
+  if(!D.doh.length){alert('No DOH rows found.');return;}
+  var oosCount=0,riskCount=0,okCount=0,totPO=0,docSum=0,docCnt=0,revRisk=0;
+  var dohHtml='',oosHtml='';
+  D.doh.forEach(function(r){
+    var doh=parseFloat(r[9]),doc=parseFloat(r[12]),po=parseFloat(r[10])||0,drr=parseFloat(r[6])||0;
+    totPO+=po;if(!isNaN(doc)&&doc>0){docSum+=doc;docCnt++;}
+    if(!isNaN(doh)){if(doh===0){oosCount++;revRisk+=drr;}else if(doh<3)riskCount++;else if(doh>=7)okCount++;}
+    var st=fDoh(r[9]);
+    var rowCls=(!isNaN(doh)&&doh===0)?'style="background:rgba(255,92,92,.04)"':(!isNaN(doh)&&doh<3)?'style="background:rgba(245,166,35,.03)"':'';
+    dohHtml+='<tr '+rowCls+'><td>'+esc(r[0])+'</td><td class="mono" style="font-size:10px">'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td><span class="p p-b">'+esc(CAT[String(r[1]).trim()]||'—')+'</span></td><td class="r mono">'+esc(r[3])+'</td><td class="r mono">'+esc(r[4])+'</td><td class="r mono">'+fR(drr)+'</td><td class="r mono">'+esc(r[9])+'</td><td class="r mono">'+fN(po)+'</td><td class="r mono">'+esc(r[11])+'</td><td class="r mono">'+esc(r[12])+'</td><td>'+st+'</td></tr>';
+    if(!isNaN(doh)&&doh<7){
+      oosHtml+='<tr><td>'+esc(r[0])+'</td><td class="mono" style="font-size:10px">'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td><span class="p p-b">'+esc(CAT[String(r[1]).trim()]||'—')+'</span></td><td class="r mono">'+esc(r[9])+'</td><td class="r mono">'+esc(r[12])+'</td><td class="r mono">'+fN(po)+'</td><td>'+st+'</td><td contenteditable="true" style="color:var(--t2);min-width:120px">—</td><td contenteditable="true" style="color:var(--t2);min-width:120px">—</td></tr>';
+    }
+  });
+  set('st-oos',oosCount);set('st-risk',riskCount);set('st-ok',okCount);
+  set('st-po',fN(totPO));set('st-doc',docCnt?(docSum/docCnt).toFixed(1)+'d':'—');
+  set('o-oos',oosCount);set('o-crit',riskCount);
+  set('o-rec',D.doh.filter(function(r){return parseFloat(r[10])>0&&parseFloat(r[9])===0;}).length);
+  set('o-rev',fR(revRisk)+'/d');set('cb-oos',oosCount+' locations');
+  set('tb-doh',dohHtml||'<tr class="empty-row"><td colspan="12">No data</td></tr>');
+  set('tb-oos',oosHtml||'<tr class="empty-row"><td colspan="10">No OOS / critical SKUs — all healthy</td></tr>');
+  flash('ok-doh');
+}
+
+function parseCity(){
+  D.city=parseTSV(document.getElementById('raw-city').value,['city_name','cityname','city name']);
+  if(!D.city.length){alert('No city rows found.');return;}
+  var topCity='—',topRev=0,dnCount=0;
+  D.city.forEach(function(r){var rev=parseFloat(r[2])||0;if(rev>topRev){topRev=rev;topCity=r[0]||'—';}var gr=parseFloat(String(r[8]).replace('%',''));if(!isNaN(gr)&&gr<0)dnCount++;});
+  var topGr=D.city.find(function(r){return r[0]===topCity;});
+  set('cy-top',topCity);set('cy-top-g',topGr?fG(topGr[8]):'<span class="d na">—</span>');
+  set('cy-toprev',fR(topRev));set('cy-dn',dnCount);set('cy-cnt',D.city.length);
+  var totRev=D.city.reduce(function(a,r){return a+(parseFloat(r[2])||0);},0);
+  var html='';D.city.sort(function(a,b){return(parseFloat(b[2])||0)-(parseFloat(a[2])||0);}).forEach(function(r){
+    html+='<tr><td>'+esc(r[0])+'</td><td>'+zonePill(r[10])+'</td><td class="r mono">'+fR(parseFloat(r[2]))+'</td><td class="r mono">'+fR(parseFloat(r[5]))+'</td><td>'+fG(r[8])+'</td><td class="r mono">'+fN(parseFloat(r[1]))+'</td><td>'+fG(r[7])+'</td><td class="r mono">'+fR(parseFloat(r[3]))+'</td><td>'+fG(r[9])+'</td></tr>';
+  });
+  set('tb-city',html);
+  var maxR=D.city[0]?parseFloat(D.city[0][2])||0:1;
+  var colors=['var(--acc)','var(--grn)','var(--pur)','var(--amb)','var(--pnk)','var(--cyn)','var(--red)'];
+  var bars='';D.city.slice(0,10).forEach(function(r,i){
+    var rv=parseFloat(r[2])||0,w=maxR>0?Math.round(rv/maxR*100):0;
+    bars+='<div class="cbar"><div class="cbar-lbl">'+esc(r[0])+'</div><div class="cbar-track"><div class="cbar-fill" style="width:'+w+'%;background:'+colors[i%colors.length]+'"></div></div><div class="cbar-num">'+fP(rv,totRev)+'</div></div>';
+  });
+  set('city-bars',bars);
+  var zMap={};
+  D.city.forEach(function(r){var z=r[10]||'Unknown';if(!zMap[z])zMap[z]={rev:0,units:0,cnt:0};zMap[z].rev+=parseFloat(r[2])||0;zMap[z].units+=parseFloat(r[1])||0;zMap[z].cnt++;});
+  html='';Object.entries(zMap).sort(function(a,b){return b[1].rev-a[1].rev;}).forEach(function(z){
+    html+='<tr><td>'+zonePill(z[0])+'</td><td class="r mono">'+fR(z[1].rev)+'</td><td class="r mono">'+fN(z[1].units)+'</td><td class="r mono">'+z[1].cnt+'</td></tr>';
+  });
+  set('tb-zone',html);flash('ok-city');
+}
+
+function parseCitySKU(){
+  D.csku=parseTSV(document.getElementById('raw-csku').value,['city_name','cityname','city name']);
+  if(!D.csku.length){alert('No city×SKU rows found.');return;}
+  D.csku.forEach(function(r){
+    r._rev=parseFloat(r[5])||0;r._cogs=parseFloat(r[16])||0;r._gmv=parseFloat(r[17])||0;
+    r._mtd=parseFloat(r[15])||0;r._cg=parseFloat(r[18])||0;r._sal=parseFloat(r[19])||0;
+    r._cmpSal=parseFloat(r[21])||0;r._revGr=parseFloat(String(r[11]).replace('%',''))||0;
+    r._unGr=parseFloat(String(r[10]).replace('%',''))||0;
+  });
+  var totGMV=D.csku.reduce(function(a,r){return a+r._gmv;},0);
+  var totCogs=D.csku.reduce(function(a,r){return a+r._cogs;},0);
+  var totMTD=D.csku.reduce(function(a,r){return a+r._mtd;},0);
+  var dnCount=D.csku.filter(function(r){return r._revGr<0;}).length;
+  var salGain=D.csku.filter(function(r){return r._sal>r._cmpSal;}).length;
+  set('cs-gmv',fR(totGMV));set('cs-cogs',fR(totCogs));
+  set('cs-margin',totGMV>0?(totCogs/totGMV*100).toFixed(1)+'%':'—');
+  set('cs-mtd',fN(totMTD));set('cs-dn',dnCount);set('cs-sal',salGain);
+  var dg=D.csku.filter(function(r){return r._revGr<0;}).sort(function(a,b){
+    var aD=(parseFloat(a[8])||0)-a._rev,bD=(parseFloat(b[8])||0)-b._rev;return bD-aD;
+  });
+  var html='';dg.forEach(function(r){
+    var salShift=r._sal-r._cmpSal;
+    var signal=r._revGr<-20?'<span class="p p-r">Urgent</span>':r._revGr<-10?'<span class="p p-a">Watch</span>':'<span class="p p-n">Minor</span>';
+    html+='<tr style="background:rgba(255,92,92,.025)"><td>'+esc(r[0])+'</td><td>'+zonePill(r[20])+'</td><td>'+esc(r[2])+'</td><td><span class="p p-b">'+esc(CAT[String(r[1]).trim()]||'—')+'</span></td><td class="r mono">'+fR(r._rev)+'</td><td class="r mono">'+fR(parseFloat(r[8]))+'</td><td>'+fG(r[11])+'</td><td>'+fG(r[10])+'</td><td class="r mono">'+r._sal.toFixed(4)+'</td><td class="r mono">'+(salShift>=0?'<span style="color:var(--grn)">▲</span> ':'<span style="color:var(--red)">▼</span> ')+Math.abs(salShift).toFixed(4)+'</td><td class="r mono">'+(r._cg*100).toFixed(1)+'%</td><td>'+signal+'</td></tr>';
+  });
+  set('tb-degrowth',html||'<tr class="empty-row"><td colspan="12">✓ No degrowth city×SKU combos in this period</td></tr>');
+  var all=D.csku.slice().sort(function(a,b){return b._rev-a._rev;});
+  html='';all.forEach(function(r,i){
+    html+='<tr><td style="color:var(--t3)">'+(i+1)+'</td><td>'+esc(r[0])+'</td><td>'+zonePill(r[20])+'</td><td>'+esc(r[2])+'</td><td><span class="p p-b">'+esc(CAT[String(r[1]).trim()]||'—')+'</span></td><td class="r mono">'+fR(r._rev)+'</td><td>'+fG(r[11])+'</td><td>'+fG(r[10])+'</td><td class="r mono">'+fR(r._gmv)+'</td><td class="r mono">'+(r._cg*100).toFixed(1)+'%</td><td class="r mono">'+fN(r._mtd)+'</td><td class="r mono">'+r._sal.toFixed(4)+'</td><td>'+bar(r._rev,all[0]?all[0]._rev:1,'var(--pur)')+'</td></tr>';
+  });
+  set('tb-csku-all',html||'<tr class="empty-row"><td colspan="13">No data</td></tr>');
+  flash('ok-csku');
+}
+
+function calcAdsTot(rows,idx){
+  var t={impr:0,datc:0,iatc:0,dqty:0,dsales:0,nua:0,spend:0};
+  rows.forEach(function(r){Object.entries(idx).forEach(function(e){t[e[0]]+=parseFloat(r[e[1]])||0;});});
+  return t;
+}
+function updateAdsKPIs(){
+  var pb=D._pbTot||{impr:0,datc:0,iatc:0,dqty:0,dsales:0,nua:0,spend:0};
+  var rc=D._recTot||{impr:0,datc:0,iatc:0,dqty:0,dsales:0,nua:0,spend:0};
+  var tI=pb.impr+rc.impr,tDs=pb.dsales+rc.dsales,tSp=pb.spend+rc.spend,
+      tNu=pb.nua+rc.nua,tDa=pb.datc+rc.datc,tIa=pb.iatc+rc.iatc,tDq=pb.dqty+rc.dqty;
+  set('a-impr',fN(tI));set('a-dsales',fR(tDs));set('a-spend',fR(tSp));
+  set('a-acos',tDs>0?(tSp/tDs*100).toFixed(1)+'%':'—');
+  set('a-roas',tSp>0?(tDs/tSp).toFixed(2)+'x':'—');
+  set('a-nua',fN(tNu));set('a-datc',fN(tDa));set('a-iatc',fN(tIa));set('a-dqty',fN(tDq));
+  set('cb-spend',fR(tSp));D._adSpend=tSp;calcTACOS();
+}
+function calcTACOS(){
+  var rev=D._totRev||0,sp=D._adSpend||0;
+  if(rev>0&&sp>0){var tc=(sp/rev*100).toFixed(1)+'%';set('a-tacos',tc);set('a-tacos-s','Spend ÷ Sales Rev');set('cb-tacos',tc);}
+}
+
+function parsePB(){
+  D.pb=parseTSV(document.getElementById('raw-pb').value,['date','Date']);
+  if(!D.pb.length){alert('No PB rows found.');return;}
+  var m={};
+  D.pb.forEach(function(r){
+    var k=r[2]||r[1]||'?';
+    if(!m[k])m[k]={nm:k,type:r[3]||'—',impr:0,dqty:0,dsales:0,nua:0,spend:0,droasSum:0,cnt:0};
+    m[k].impr+=parseFloat(r[9])||0;m[k].dqty+=parseFloat(r[12])||0;
+    m[k].dsales+=parseFloat(r[14])||0;m[k].nua+=parseFloat(r[16])||0;
+    m[k].spend+=parseFloat(r[17])||0;m[k].droasSum+=parseFloat(r[18])||0;m[k].cnt++;
+  });
+  D._pbTot=calcAdsTot(D.pb,{impr:9,datc:10,iatc:11,dqty:12,dsales:14,nua:16,spend:17});
+  updateAdsKPIs();
+  var arr=Object.values(m).sort(function(a,b){return b.dsales-a.dsales;});
+  var html='';arr.forEach(function(c){
+    var dr=c.cnt?c.droasSum/c.cnt:0,rc=dr>4?'var(--grn)':dr>2?'var(--amb)':'var(--red)';
+    html+='<tr><td>'+esc(c.nm)+'</td><td><span class="p p-b">'+esc(c.type)+'</span></td><td class="r mono">'+fN(c.impr)+'</td><td class="r mono">'+fN(c.dqty)+'</td><td class="r mono">'+fR(c.dsales)+'</td><td class="r mono">'+fR(c.spend)+'</td><td class="r mono" style="color:'+rc+'">'+dr.toFixed(1)+'x</td><td class="r mono">'+Math.round(c.nua)+'</td></tr>';
+  });
+  set('tb-pb',html||'<tr class="empty-row"><td colspan="8">No data</td></tr>');
+  flash('ok-pb');
+}
+
+function parseRec(){
+  D.rec=parseTSV(document.getElementById('raw-rec').value,['date','Date']);
+  if(!D.rec.length){alert('No Rec rows found.');return;}
+  var m={};
+  D.rec.forEach(function(r){
+    var k=r[2]||r[1]||'?';
+    if(!m[k])m[k]={nm:k,type:r[3]||'—',impr:0,dqty:0,dsales:0,nua:0,spend:0,droasSum:0,cnt:0};
+    m[k].impr+=parseFloat(r[6])||0;m[k].dqty+=parseFloat(r[9])||0;
+    m[k].dsales+=parseFloat(r[11])||0;m[k].nua+=parseFloat(r[13])||0;
+    m[k].spend+=parseFloat(r[14])||0;m[k].droasSum+=parseFloat(r[15])||0;m[k].cnt++;
+  });
+  D._recTot=calcAdsTot(D.rec,{impr:6,datc:7,iatc:8,dqty:9,dsales:11,nua:13,spend:14});
+  updateAdsKPIs();
+  var arr=Object.values(m).sort(function(a,b){return b.dsales-a.dsales;});
+  var html='';arr.forEach(function(c){
+    var dr=c.cnt?c.droasSum/c.cnt:0,rc=dr>4?'var(--grn)':dr>2?'var(--amb)':'var(--red)';
+    html+='<tr><td>'+esc(c.nm)+'</td><td><span class="p p-p">'+esc(c.type)+'</span></td><td class="r mono">'+fN(c.impr)+'</td><td class="r mono">'+fN(c.dqty)+'</td><td class="r mono">'+fR(c.dsales)+'</td><td class="r mono">'+fR(c.spend)+'</td><td class="r mono" style="color:'+rc+'">'+dr.toFixed(1)+'x</td><td class="r mono">'+Math.round(c.nua)+'</td></tr>';
+  });
+  set('tb-rec',html||'<tr class="empty-row"><td colspan="8">No data</td></tr>');
+  flash('ok-rec');
+}
+
+function addOOSRow(){
+  var tb=document.getElementById('tb-oos'),tr=document.createElement('tr');
+  tr.innerHTML='<td contenteditable="true">WH</td><td class="mono" contenteditable="true" style="font-size:10px">—</td><td contenteditable="true">SKU</td><td><span class="p p-b">—</span></td><td class="r mono" contenteditable="true">0</td><td class="r mono" contenteditable="true">0</td><td class="r mono" contenteditable="true">0</td><td><span class="p p-r">OOS</span></td><td contenteditable="true" style="color:var(--t2);min-width:100px">—</td><td contenteditable="true" style="color:var(--t2);min-width:100px">—</td>';
+  tb.appendChild(tr);
+}
+
+// ════════════════════════════════════════════
+// SESSION SAVE / LOAD  — localStorage + URL export
+// ════════════════════════════════════════════
+var LS_KEY = 'blinkit-deck-v1';
+
+function setSaveStatus(msg, col) {
+  var el = document.getElementById('save-status');
+  if (el) { el.textContent = msg; el.style.color = col || 'var(--t3)'; }
+}
+
+function collectPayload() {
+  var raws = {};
+  ['raw-sales','raw-soh','raw-doh','raw-city','raw-csku','raw-pb','raw-rec'].forEach(function(id) {
+    var el = document.getElementById(id); if (el && el.value.trim()) raws[id] = el.value;
+  });
+  var notes = {};
+  document.querySelectorAll('textarea.nt').forEach(function(el, i) {
+    if (el.value.trim()) notes['nt-'+i] = el.value;
+  });
+  return { wk: document.getElementById('wk').value, raws: raws, notes: notes, savedAt: new Date().toISOString() };
+}
+
+function applyPayload(payload) {
+  if (!payload) return;
+  if (payload.wk) document.getElementById('wk').value = payload.wk;
+  Object.entries(payload.raws || {}).forEach(function(e) {
+    var el = document.getElementById(e[0]); if (el) el.value = e[1];
+  });
+  var ntEls = document.querySelectorAll('textarea.nt');
+  Object.entries(payload.notes || {}).forEach(function(e) {
+    var idx = parseInt(e[0].replace('nt-','')); if (ntEls[idx]) ntEls[idx].value = e[1];
+  });
+  // re-parse all non-empty dumps silently
+  [['raw-sales',parseSales],['raw-soh',parseSOH],['raw-doh',parseDOH],
+   ['raw-city',parseCity],['raw-csku',parseCitySKU],['raw-pb',parsePB],['raw-rec',parseRec]
+  ].forEach(function(p) {
+    var el = document.getElementById(p[0]);
+    if (el && el.value.trim().length > 20) { try { p[1](); } catch(e) {} }
+  });
+}
+
+function saveSession() {
+  setSaveStatus('Saving…', 'var(--amb)');
+  try {
+    var payload = collectPayload();
+    localStorage.setItem(LS_KEY, JSON.stringify(payload));
+    setSaveStatus('Saved ✓', 'var(--grn)');
+    setTimeout(function(){ setSaveStatus(''); }, 3000);
+  } catch(e) {
+    setSaveStatus('Save failed', 'var(--red)');
+    console.error('Save error:', e);
+  }
+}
+
+function exportLink() {
+  try {
+    var payload = collectPayload();
+    var json = JSON.stringify(payload);
+    // base64 encode for URL safety
+    var b64 = btoa(unescape(encodeURIComponent(json)));
+    // copy to clipboard
+    var url = location.href.split('#')[0] + '#s=' + b64;
+    navigator.clipboard.writeText(url).then(function() {
+      setSaveStatus('Link copied!', 'var(--acc2)');
+      setTimeout(function(){ setSaveStatus(''); }, 4000);
+    }).catch(function() {
+      // fallback: show in prompt
+      prompt('Copy this link:', url);
+    });
+  } catch(e) {
+    setSaveStatus('Export failed', 'var(--red)');
+  }
+}
+
+function clearSession() {
+  if (!confirm('Clear saved session? This cannot be undone.')) return;
+  try {
+    localStorage.removeItem(LS_KEY);
+    location.hash = '';
+    setSaveStatus('Cleared', 'var(--t2)');
+    setTimeout(function(){ setSaveStatus(''); }, 2000);
+  } catch(e) {}
+}
+
+function loadSession() {
+  // 1. try URL hash first (shared link)
+  try {
+    var hash = location.hash;
+    if (hash && hash.startsWith('#s=')) {
+      var b64 = hash.slice(3);
+      var json = decodeURIComponent(escape(atob(b64)));
+      var payload = JSON.parse(json);
+      applyPayload(payload);
+      var d = new Date(payload.savedAt);
+      setSaveStatus('Shared · ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), 'var(--acc2)');
+      setTimeout(function(){ setSaveStatus(''); }, 5000);
+      return;
+    }
+  } catch(e) {}
+  // 2. fall back to localStorage
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (raw) {
+      var payload = JSON.parse(raw);
+      applyPayload(payload);
+      var d = new Date(payload.savedAt);
+      setSaveStatus('Restored · ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), 'var(--t2)');
+      setTimeout(function(){ setSaveStatus(''); }, 4000);
+    }
+  } catch(e) {}
+  // 3. set default week label if nothing loaded
+  if (!document.getElementById('wk').value) {
+    var d=new Date(),ms=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('wk').value='Wk'+Math.ceil(d.getDate()/7)+' · '+ms[d.getMonth()]+' '+d.getFullYear();
+  }
+}
+
+window.addEventListener('load', loadSession);
+
+
+</script>
+</body>
+</html>
