@@ -208,6 +208,8 @@ textarea.nt::placeholder{color:var(--t3);font-size:11px}
   <div class="tb-name">Blinkit Weekly Deck</div>
   <span class="tb-sub" id="tb-period">—</span>
   <div class="tb-divider"></div>
+  <div style="font-size:12px;color:var(--t2)">👋 Hi <span id="user-firstname" style="color:var(--t1);font-weight:600">there</span></div>
+  <div class="tb-divider"></div>
   <div class="date-range">
     <span class="date-label">MTD</span>
     <input type="date" class="date-input" id="mtd-start" onchange="onDateChange()">
@@ -834,24 +836,53 @@ function fetchData(){
   if(!url){showConnect();return;}
   setStatus('Fetching…','loading');
   set('api-status-detail','Connecting to Google Sheet…');
-  // Use a cache-busting param
-  fetch(url+'?v='+Date.now(),{method:'GET',mode:'cors',credentials:'include'})
-    .then(function(r){
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      return r.json();
-    })
-    .then(function(json){
-      if(json.error){throw new Error(json.error+': '+(json.message||''));}
-      RAW=json.data||{};
-      setStatus('Live · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),'ok');
-      set('api-status-detail','Last fetch: '+new Date().toLocaleTimeString());
-      processAll();
+  // Apps Script requires no-cors mode or JSONP for cross-origin browser fetch.
+  // We use no-cors and rely on the script being deployed as "Anyone in org"
+  // with the user signed into their @thedeconstruct.in Google account.
+  fetch(url+'?v='+Date.now(),{method:'GET',mode:'no-cors',credentials:'include'})
+    .then(function(){
+      // no-cors returns opaque response — can't read body via fetch.
+      // Use JSONP approach instead (script tag injection).
+      return fetchViaScript(url);
     })
     .catch(function(err){
-      setStatus('Error','err');
-      set('api-status-detail','Error: '+err.message+'. Make sure you are signed into @thedeconstruct.in in this browser.');
-      console.error('Fetch error:',err);
+      // Fallback directly to script tag approach
+      fetchViaScript(url);
     });
+}
+
+function fetchViaScript(url){
+  // Clean up any previous script tag
+  var old=document.getElementById('gs-loader');
+  if(old)old.remove();
+  // JSONP-style: Apps Script will wrap response if callback param given
+  window._gsCallback=function(json){
+    var old2=document.getElementById('gs-loader');
+    if(old2)old2.remove();
+    if(json.error){
+      setStatus('Error','err');
+      set('api-status-detail','Error: '+json.error+' — '+json.message);
+      return;
+    }
+    RAW=json.data||{};
+    setStatus('Live · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),'ok');
+    set('api-status-detail','Last fetched: '+new Date().toLocaleTimeString()+' · by '+((json.meta||{}).fetchedBy||'unknown'));
+    // Set Hi firstname from email e.g. "john@thedeconstruct.in" → "John"
+    var email=(json.meta||{}).fetchedBy||'';
+    var firstname=email.split('@')[0].split('.')[0];
+    firstname=firstname.charAt(0).toUpperCase()+firstname.slice(1);
+    set('user-firstname',firstname||'there');
+    processAll();
+  };
+  var s=document.createElement('script');
+  s.id='gs-loader';
+  s.src=url+'?callback=_gsCallback&v='+Date.now();
+  s.onerror=function(){
+    setStatus('Error','err');
+    set('api-status-detail','Could not reach Google Script. Check: 1) You are signed into name@thedeconstruct.in in this browser. 2) The script is deployed as "Anyone within organization". 3) The URL is correct.');
+    document.getElementById('gs-loader').remove();
+  };
+  document.head.appendChild(s);
 }
 
 // ══════════════════════════════════════════════════════
